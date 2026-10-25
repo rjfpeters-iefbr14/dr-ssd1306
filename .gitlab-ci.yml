@@ -1,0 +1,45 @@
+# Tests on Python 3.11-3.13 and the package build, with uv and the committed
+# uv.lock. CI has no Raspberry Pi hardware: the tests use a fake clock and a
+# fake display.
+
+stages:
+  - test
+  - build
+
+variables:
+  UV_VERSION: "0.13.1"
+  UV_CACHE_DIR: .uv-cache
+  UV_LINK_MODE: copy
+
+default:
+  image: ghcr.io/astral-sh/uv:${UV_VERSION}-python${PYTHON_VERSION}-trixie-slim
+  cache:
+    key:
+      files: [uv.lock]
+      prefix: uv-${PYTHON_VERSION}
+    paths: [.uv-cache]
+  after_script:
+    - uv cache prune --ci
+
+test:
+  stage: test
+  parallel:
+    matrix:
+      - PYTHON_VERSION: ["3.11", "3.12", "3.13"]
+  script:
+    - uv sync --locked
+    - uv run --locked pytest -q --junitxml=report.xml
+  artifacts:
+    when: always
+    reports:
+      junit: report.xml
+
+build:
+  stage: build
+  variables:
+    PYTHON_VERSION: "3.12"
+  script:
+    - uv build
+  artifacts:
+    paths: [dist/]
+    expire_in: 1 week

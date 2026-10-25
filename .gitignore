@@ -5,3 +5,5 @@ dist/
 *.egg-info/
 .DS_Store
 .idea/
+.uv-cache/
+report.xml
