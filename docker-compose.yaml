@@ -1,0 +1,28 @@
+# DR SSD1306 demo.
+#
+#   docker compose up -d
+#
+# On a Raspberry Pi, add docker-compose.pi.yaml to also drive the OLED.
+# The port is published on all interfaces, so the demo and its plugin API
+# are reachable from the LAN (an FSP on another host needs that). Set
+# DR_SSD1306_PASSWORD to protect the web controls (the plugin API and
+# /health stay open), or DR_BIND=127.0.0.1 to keep it local.
+
+services:
+  dr-ssd1306:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    image: dr-ssd1306
+    ports:
+      - "${DR_BIND:-0.0.0.0}:${DR_PORT:-8080}:8080"
+    environment:
+      DR_SSD1306_PASSWORD: ${DR_SSD1306_PASSWORD:-}
+      # debug also shows the polled requests (/api/state, /plugin/attached, ...).
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+    volumes:
+      - settings:/data
+    restart: unless-stopped
+
+volumes:
+  settings:

@@ -1,0 +1,36 @@
+[project]
+name = "dr-ssd1306"
+version = "0.2.0"
+description = "Demand-response simulation on a 128x64 SSD1306 OLED, with live web controls and an RTI-FSP plugin"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+authors = [{name = "DR SSD1306 contributors"}]
+keywords = ["demand-response", "SSD1306", "oled", "raspberry-pi", "simulation", "uv"]
+dependencies = [
+    "Pillow>=10.4,<13",
+    "fastapi>=0.115,<1",
+    "uvicorn>=0.30,<1",
+]
+
+[project.optional-dependencies]
+pi = ["luma.oled>=3.14,<4"]
+
+[project.scripts]
+dr-ssd1306 = "dr_ssd1306.server.cli:main"
+
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/dr_ssd1306"]
+
+[tool.hatch.build.targets.sdist]
+include = ["src", "tests", "docs", "playbooks", "README.md", "LICENSE", "pyproject.toml", ".gitignore"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[dependency-groups]
+dev = ["pytest>=8,<10", "httpx>=0.27,<1"]

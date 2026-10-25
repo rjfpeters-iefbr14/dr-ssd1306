@@ -1,0 +1,48 @@
+# SP01 drops off during a DR event on the dr-ssd1306 OLED and comes back.
+# Unattended. While SP01's server is stopped the OLED shows NO LINK with
+# the last reduction, stale; the event timer runs on. Once the SO has
+# associated SP01 again the link is restored and the plugin writes all
+# values again. SP01 runs model_1.py (cp1) with the display_ssd1306
+# plugin. From the rti-demo:
+#
+#   cd examples/rti-demo
+#   uv run python -m playbooks.run /path/to/dr-ssd1306/playbooks/dr-link-loss.yaml
+#
+# Setup: playbooks/README.md.
+
+name: DR link loss during an event on the SSD1306 OLED
+bff: http://localhost:3000
+pace: 2s
+
+steps:
+  - label: SP01 dials the SO
+    link: {fsp: SP01}
+    expect: {linked: [SP01]}
+
+  - label: Reporting off to start with
+    disable-report: {fsp: SP01, rcb: LD0/LLN0.rcbActualValues, type: URCB}
+  - label: SO asks for a 3.0 kW limit - the OLED shows an active event
+    operate: {fsp: SP01, ref: LD0/DWMX1.WMaxSpt, cdc: APC, value: 3000}
+  - label: SP01 reports the OLED's power
+    enable-report: {fsp: SP01, rcb: LD0/LLN0.rcbActualValues, type: URCB}
+  - wait: 3s
+    expect: {reports: {fsp: SP01, min: 1}}
+
+  - label: SP01 drops off for 10 s - the OLED shows NO LINK
+    drop: {fsp: SP01, for: 10s}
+    expect: {linked: [SP01]}
+
+  # A new association has no reporting on.
+  - label: SP01 reports again after the reconnect
+    enable-report: {fsp: SP01, rcb: LD0/LLN0.rcbActualValues, type: URCB}
+  - wait: 3s
+    expect: {reports: {fsp: SP01, min: 1}}
+  - label: The values are written again
+    read: {fsp: SP01, ref: LD0/MMXU1.TotW.mag.f, fc: mx}
+
+  - label: SO ends the event
+    operate: {fsp: SP01, ref: LD0/DWMX1.WMaxSpt, cdc: APC, value: 6000}
+  - wait: 3s
+
+  - label: SP01 stops reporting
+    disable-report: {fsp: SP01, rcb: LD0/LLN0.rcbActualValues, type: URCB}

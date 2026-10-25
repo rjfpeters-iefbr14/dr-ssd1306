@@ -1,0 +1,15 @@
+# On a Raspberry Pi: drive the SSD1306 on I2C bus 1 (enable I2C first:
+# raspi-config, Interface Options).
+#
+#   I2C_GID=$(stat -c %g /dev/i2c-1) \
+#     docker compose -f docker-compose.yaml -f docker-compose.pi.yaml up -d
+#
+# For another bus, pass its device node and set i2c_bus in the web controls.
+
+services:
+  dr-ssd1306:
+    command: ["serve", "--host", "0.0.0.0", "--port", "8080", "--config", "/data/settings.json", "--hardware"]
+    devices:
+      - /dev/i2c-1
+    group_add:
+      - "${I2C_GID:?set I2C_GID to the group of /dev/i2c-1}"

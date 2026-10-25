@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Demand Response · SSD1306 OLED</title>
+<style>
+:root{color-scheme:dark;--bg:#0d1117;--panel:#171e28;--ink:#ecf1f7;--muted:#aebccc;--line:#334357;--accent:#59c9fa}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,sans-serif}main{max-width:1080px;margin:auto;padding:28px 20px}header{margin-bottom:24px}h1{font-size:26px;margin:0 0 4px;font-weight:600}h2{font-size:18px;margin:0 0 16px;font-weight:600}p{margin:6px 0;color:var(--muted)}.layout{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}.panel{background:var(--panel);padding:22px;border:1px solid var(--line);border-radius:12px}.screen{padding:18px;background:#000;border-radius:8px}.screen img{display:block;width:100%;height:auto;image-rendering:pixelated;aspect-ratio:2}.meta{display:flex;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:13px;margin:12px 0}.buttons{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0}button,input,select{font:inherit}button{border:1px solid var(--line);border-radius:7px;padding:10px 14px;background:#253448;color:var(--ink);cursor:pointer}button.primary{background:var(--accent);color:#03121c;border:0}button:disabled{opacity:.5;cursor:wait}button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:3px}.fields{display:grid;grid-template-columns:1fr 1fr;gap:14px}label{display:block;color:var(--muted);font-size:14px}input:not([type=checkbox]),select{display:block;width:100%;margin-top:4px;background:#0d141e;border:1px solid var(--line);border-radius:6px;color:var(--ink);padding:8px;min-width:0}input[type=range]{padding:0}details{margin-top:20px}summary{cursor:pointer;margin-bottom:14px}a{color:var(--accent)}.check{display:flex;gap:8px;align-items:center;margin:12px 0}.status{padding:12px 0;color:var(--ink);overflow-wrap:anywhere}.error{color:#ffb1aa;min-height:24px;overflow-wrap:anywhere}.metric{font-variant-numeric:tabular-nums}.note{font-size:13px;margin-top:12px}.wide{grid-column:1/-1}.badge{color:#ffd830;font-size:13px;letter-spacing:.08em}footer{margin-top:24px;font-size:13px;color:var(--muted)}@media(max-width:760px){.layout{grid-template-columns:1fr}}@media(max-width:380px){main{padding:16px 12px}.panel{padding:14px}.fields{grid-template-columns:1fr}}
+</style>
+</head>
+<body><main>
+<header><div class="badge">SIMULATED DEMAND RESPONSE</div><h1>OLED demonstration</h1><p>Adjust the request and response. See the same pixels in the browser and on your display.</p></header>
+<div class="layout">
+<section class="panel"><h2>Live display</h2>
+<div class="screen"><img id="screen" src="/api/screen.png" width="128" height="64" alt="Live 128 by 64 pixel demand-response OLED preview"></div>
+<div class="meta"><span>128 × 64 pixels</span><span id="palette-label">Yellow / blue</span><span>1 Hz browser refresh</span></div>
+<div id="live" class="status metric" aria-live="polite">Connecting…</div>
+<div class="buttons"><button type="button" class="primary" data-action="start">Activate now</button><button type="button" data-action="schedule">Schedule</button><button type="button" data-action="complete">Complete</button><button type="button" data-action="ready">Ready</button></div>
+<div class="buttons"><button type="button" data-action="link-lost">Lose demo link</button><button type="button" data-action="link-restored">Restore demo link</button></div>
+<div id="hardware-status" class="note">Display: simulation</div>
+<p class="note">REDUCE = baseline − simulated demand. The bar shows delivered reduction as a percentage of the request. The small trend shows simulated demand over recent updates.</p>
+<p class="note">Link loss marks the last value stale. The demo timer continues; it does not control real equipment.</p>
+<a href="/api/screen.png?raw=1" target="_blank" rel="noopener">View monochrome frame</a>
+</section>
+<section class="panel"><h2>Demo settings</h2>
+<form id="settings"><div class="fields">
+<label>Event ID<input name="event_id" maxlength="7" pattern="[A-Z0-9-]{1,7}" required></label>
+<label>Requested reduction (kW)<input name="requested_kw" type="number" min="0" max="99.9" step="0.1" required></label>
+<label>Baseline demand (kW)<input name="baseline_kw" type="number" min="0" max="99.9" step="0.1" required></label>
+<label>Simulated demand (kW)<input name="demand_kw" type="number" min="0" max="99.9" step="0.1" required></label>
+<label>Activation duration (seconds)<input name="duration_seconds" type="number" min="1" max="5999" step="1" required></label>
+<label>Schedule delay (seconds)<input name="schedule_delay_seconds" type="number" min="0" max="5999" step="1" required></label>
+<label class="wide">Preview / panel color<select name="preview_palette"><option value="yellow-blue">Fixed yellow header + blue content</option><option value="white">White monochrome</option><option value="blue">Blue monochrome</option></select></label>
+</div>
+<details><summary>Physical SSD1306 display</summary>
+<label class="check"><input name="hardware_enabled" type="checkbox"> Enable I²C hardware output</label>
+<div class="fields">
+<label>I²C bus<input name="i2c_bus" type="number" min="0" max="255" step="1" required></label>
+<label>I²C address<select name="i2c_address"><option value="60">0x3C</option><option value="61">0x3D</option></select></label>
+<label>Rotation<select name="rotation"><option value="0">0°</option><option value="180">180°</option></select></label>
+<label>Contrast (0–255)<input name="contrast" type="number" min="0" max="255" step="1" required></label>
+</div><p class="note">Requires the hardware extra and access to /dev/i2c-N. Connection changes apply after saving. Preview colors represent the physical panel; they do not change its pixel colors.</p>
+</details>
+<div class="buttons"><button class="primary" type="submit">Save & apply</button><a href="/api/settings" target="_blank" rel="noopener">Configuration JSON</a></div>
+<p class="note">Settings persist across restarts. Duration and delay edits apply to the next activation. Every restart begins in Ready.</p>
+</form>
+</section>
+</div><div id="error" role="alert" class="error"></div>
+<footer>DR SSD1306 · MIT license · All power and demand-response values are simulated.</footer>
+</main>
+<script>
+(()=>{
+const form=document.getElementById('settings'),error=document.getElementById('error');let loaded=false,busy=false,polling=false;
+const numeric=['requested_kw','baseline_kw','demand_kw','duration_seconds','schedule_delay_seconds','i2c_bus','i2c_address','rotation','contrast'];
+async function api(path,payload){const options=payload===undefined?{}:{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)};const r=await fetch(path,options);let data;try{data=await r.json()}catch{throw Error('Server returned an unreadable response')};if(!r.ok)throw Error(data.error||'Request failed');return data}
+function populate(s){Object.entries(s).forEach(([key,value])=>{const el=form.elements.namedItem(key);if(!el)return;if(el.type==='checkbox')el.checked=value;else{if(key==='i2c_address'&&!Array.from(el.options).some(o=>Number(o.value)===value)){el.add(new Option('0x'+value.toString(16).toUpperCase(),value))}el.value=value}})}
+function show(state){const s=state.settings;document.getElementById('live').textContent=state.display_state.toUpperCase()+' · '+state.delivered_kw.toFixed(1)+' kW reduction · '+state.fulfilment_percent+'% of request'+(state.mode==='active'?' · '+state.remaining_seconds+' s remaining':'');document.getElementById('hardware-status').textContent='OLED output: '+state.hardware.status+(state.hardware.error?' · '+state.hardware.error:'');document.getElementById('palette-label').textContent=s.preview_palette;document.getElementById('screen').alt='Demand response '+state.display_state+', '+state.delivered_kw+' kW';document.getElementById('screen').src='/api/screen.png?t='+Date.now();if(!loaded){populate(s);loaded=true}}
+async function refresh(){if(polling||busy)return;polling=true;try{show(await api('/api/state'));if(error.dataset.poll==='1'){error.textContent='';error.dataset.poll='0'}}catch(e){error.textContent=e.message;error.dataset.poll='1'}finally{polling=false}}
+async function write(path,data){busy=true;error.textContent='';document.querySelectorAll('button').forEach(b=>b.disabled=true);try{const state=await api(path,data);show(state);return state}catch(e){error.textContent=e.message;return null}finally{busy=false;document.querySelectorAll('button').forEach(b=>b.disabled=false)}}
+form.addEventListener('submit',async e=>{e.preventDefault();const data={};for(const [key,value] of new FormData(form).entries()){if(key==='hardware_enabled')continue;data[key]=numeric.includes(key)?Number(value):value}data.hardware_enabled=form.elements.hardware_enabled.checked;const result=await write('/api/settings',data);if(result)populate(result.settings)});
+document.querySelectorAll('[data-action]').forEach(button=>button.addEventListener('click',()=>write('/api/action',{action:button.dataset.action})));
+refresh();setInterval(refresh,1000);
+})();
+</script>
+</body></html>
