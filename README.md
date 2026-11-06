@@ -109,6 +109,13 @@ Enable **Interface Options → I2C**, then restart if requested. For a typical
 | SCL | 5 | GPIO3 / I²C SCL |
 
 Check your module's voltage requirements. Do not connect 5 V logic to Pi GPIO.
+The physical pins are the same on a Raspberry Pi 3 and 5:
+
+![SSD1306 I²C wiring for a Raspberry Pi 5](docs/design/pi5-wiring.png)
+
+The same diagram for a Raspberry Pi 3 is [`docs/design/pi3-wiring.png`](docs/design/pi3-wiring.png); both have an
+editable SVG next to them.
+
 With `i2c-tools` installed, check the bus and grant the user device access:
 
 ```bash

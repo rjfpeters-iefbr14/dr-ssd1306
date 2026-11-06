@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="500" viewBox="0 0 920 500" role="img">
+<title>Four-pin SSD1306 I²C OLED to Raspberry Pi 5 wiring</title>
+<desc>I²C1 wiring labels and pin numbers; connections are arranged as a list, not in physical header order.</desc>
+<rect width="920" height="500" rx="20" fill="#071526"/>
+<g font-family="DejaVu Sans, sans-serif">
+<text x="35" y="49" fill="#F4F9FF" font-size="27" font-weight="700">SSD1306 ↔ Raspberry Pi 5</text>
+<text x="35" y="78" fill="#9EB2CF" font-size="15">128 × 64 OLED · 4 wires · I²C1 · 3.3 V logic</text>
+<g id="oled-display">
+<rect x="36" y="108" width="234" height="274" rx="19" fill="#0B2238" stroke="#00D8FF" stroke-width="3"/>
+<rect x="55" y="126" width="196" height="61" rx="8" fill="#14324B"/>
+<text x="153" y="152" font-size="17" text-anchor="middle" fill="#00D8FF" font-weight="700">SSD1306</text>
+<text x="153" y="173" font-size="13" text-anchor="middle" fill="#F4F9FF">OLED · 128 × 64 · 0x3C</text>
+</g>
+<g id="pi-board">
+<rect x="535" y="108" width="346" height="274" rx="19" fill="#0B2238" stroke="#28F59A" stroke-width="3"/>
+<text x="708" y="140" font-size="20" text-anchor="middle" fill="#28F59A" font-weight="700">Raspberry Pi 5</text>
+<text x="708" y="164" font-size="14" text-anchor="middle" fill="#9EB2CF">40-pin GPIO header · I²C1</text>
+</g>
+<g id="wires">
+<g id="wire-1" data-physical-pin="1">
+<text x="66" y="222" font-size="16" fill="#F4F9FF">VCC</text>
+<circle cx="249" cy="217" r="5" fill="#F24A51"/>
+<line x1="254" y1="217" x2="555" y2="217" stroke="#F24A51" stroke-width="4"/>
+<circle cx="555" cy="217" r="6" fill="#F24A51"/>
+<text x="582" y="222" font-size="14" fill="#F4F9FF">3.3 V power</text>
+<text x="856" y="222" font-size="13" fill="#F24A51" text-anchor="end">pin 1</text>
+</g>
+<g id="wire-2" data-physical-pin="6">
+<text x="66" y="264" font-size="16" fill="#F4F9FF">GND</text>
+<circle cx="249" cy="259" r="5" fill="#000000" stroke="#8DA0B8" stroke-width="1.5"/>
+<line x1="254" y1="259" x2="555" y2="259" stroke="#8DA0B8" stroke-width="7"/>
+<line x1="254" y1="259" x2="555" y2="259" stroke="#000000" stroke-width="4"/>
+<circle cx="555" cy="259" r="6" fill="#000000" stroke="#8DA0B8" stroke-width="1.5"/>
+<text x="582" y="264" font-size="14" fill="#F4F9FF">Ground</text>
+<text x="856" y="264" font-size="13" fill="#8DA0B8" text-anchor="end">pin 6</text>
+</g>
+<g id="wire-3" data-physical-pin="5">
+<text x="66" y="306" font-size="16" fill="#F4F9FF">SCL</text>
+<circle cx="249" cy="301" r="5" fill="#FFBF27"/>
+<line x1="254" y1="301" x2="555" y2="301" stroke="#FFBF27" stroke-width="4"/>
+<circle cx="555" cy="301" r="6" fill="#FFBF27"/>
+<text x="582" y="306" font-size="14" fill="#F4F9FF">I²C1 SCL</text>
+<text x="856" y="306" font-size="13" fill="#FFBF27" text-anchor="end">GPIO3 · pin 5</text>
+</g>
+<g id="wire-4" data-physical-pin="3">
+<text x="66" y="348" font-size="16" fill="#F4F9FF">SDA</text>
+<circle cx="249" cy="343" r="5" fill="#28F59A"/>
+<line x1="254" y1="343" x2="555" y2="343" stroke="#28F59A" stroke-width="4"/>
+<circle cx="555" cy="343" r="6" fill="#28F59A"/>
+<text x="582" y="348" font-size="14" fill="#F4F9FF">I²C1 SDA</text>
+<text x="856" y="348" font-size="13" fill="#28F59A" text-anchor="end">GPIO2 · pin 3</text>
+</g>
+</g>
+<text x="36" y="415" font-size="14" fill="#FFBF27">CAUTION: Shut down before wiring. Verify the module supply voltage.</text>
+<text x="36" y="438" font-size="13" fill="#9EB2CF">Enable I²C in raspi-config first; the display usually answers at 0x3C on bus 1.</text>
+<text x="36" y="461" font-size="13" fill="#9EB2CF">Pi-side rows are a wiring checklist, not a physical GPIO header layout.</text>
+</g></svg>
